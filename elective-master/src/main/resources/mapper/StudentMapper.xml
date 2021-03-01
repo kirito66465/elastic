@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="per.fjl.elective.mapper.StudentMapper">
+
+	<sql id="fields">
+        card, password, collegeId, classId, name, loginTime
+    </sql>
+
+	<sql id="values">
+		#{card}, #{password}, #{collegeId}, #{classId}, #{name}, #{loginTime}
+	</sql>
+
+	<!-- 学生注册 -->
+	<insert id="register" parameterType="Student">
+		INSERT INTO t_stu (
+			<include refid="fields" />
+		) VALUES (
+		<include refid="values" />
+		)
+	</insert>
+
+	<!-- 学生登录 -->
+	<select id="login" resultType="Integer">
+		SELECT count(1)
+		FROM t_stu
+		WHERE 1 = 1
+		AND card = #{card}
+		AND password = #{password}
+	</select>
+
+	<!-- 根据学号查询该学生信息 -->
+	<select id="getStudentByCard" parameterType="String" resultType="Student">
+		SELECT <include refid="fields" />
+		FROM t_stu
+		WHERE card = #{card}
+	</select>
+
+	<!-- 修改密码 -->
+	<update id="updatePwd">
+		UPDATE t_stu
+		SET password = #{newPwd}
+		WHERE 1 = 1
+		AND card = #{card}
+		AND password = #{oldPwd}
+	</update>
+
+	<!-- 更新最近登录时间 -->
+	<update id="updateLoginTime">
+		UPDATE t_stu
+		SET loginTime = #{loginTime}
+		WHERE card = #{card}
+	</update>
+
+</mapper>

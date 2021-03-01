@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="per.fjl.elective.mapper.TeacherMapper">
+
+	<sql id="fields">
+        card, password, collegeId, name, loginTime
+    </sql>
+
+	<sql id="values">
+		#{card}, #{password}, #{collegeId}, #{name}, #{loginTime}
+	</sql>
+
+	<!-- 老师登录 -->
+	<select id="login" resultType="Integer">
+		SELECT count(*)
+		FROM t_tea
+		WHERE 1 = 1
+		AND card = #{card}
+		AND password = #{password}
+	</select>
+
+	<!-- 根据学号查询该老师信息 -->
+	<select id="getTeacherByCard" parameterType="String" resultType="Teacher">
+		SELECT <include refid="fields" />
+		FROM t_tea
+		WHERE card = #{card}
+	</select>
+
+	<!-- 修改密码 -->
+	<update id="updatePwd">
+		UPDATE t_tea
+		SET password = #{newPwd}
+		WHERE 1 = 1
+		AND card = #{card}
+		AND password = #{oldPwd}
+	</update>
+
+	<!-- 更新最近登录时间 -->
+	<update id="updateLoginTime">
+		UPDATE t_tea
+		SET loginTime = #{loginTime}
+		WHERE card = #{card}
+	</update>
+
+</mapper>

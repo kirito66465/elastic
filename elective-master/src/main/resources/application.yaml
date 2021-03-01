@@ -1,0 +1,87 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: elective
+
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    # Druid 扩展属性配置
+    druid:
+      # redmi 虚拟机
+      url: jdbc:mysql://192.168.152.100:3306/fjl?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
+
+      # aorus 虚拟机
+#      url: jdbc:mysql://192.168.32.101:3306/fjl?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
+
+      username: demo
+      password: demo
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      # 初始化大小，最小，最大
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      # 配置获取连接等待超时的时间(毫秒)
+      max-wait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      time-between-eviction-runs-millis: 60000
+      # 配置有一个连接在连接池中的最小生存时间，单位是毫秒
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      validation-query-timeout: 60
+      # 开启 Druid 监控功能
+      filters: stat,wall
+      filter:
+        stat: # 配置 StatFilter ，对应文档 https://github.com/alibaba/druid/wiki/%E9%85%8D%E7%BD%AE_StatFilter
+          log-slow-sql: true # 开启慢查询记录
+          slow-sql-millis: 5000 # 慢 SQL 的标准，单位：毫秒
+      stat-view-servlet: # 配置 StatViewServlet ，对应文档 https://github.com/alibaba/druid/wiki/%E9%85%8D%E7%BD%AE_StatViewServlet%E9%85%8D%E7%BD%AE
+        enabled: true # 是否开启 StatViewServlet
+        login-username: kirito # 账号
+        login-password: kirito # 密码
+      # web url 请求监控
+      web-stat-filter:
+        enabled: true
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+
+  redis:
+    # redmi 虚拟机
+    host: 192.168.152.100
+    port: 6379
+    database: 0
+    password: kirito
+
+    # aorus 虚拟机
+#    host: 192.168.32.101
+#    port: 6379
+#    database: 0
+#    password: kirito
+
+  freemarker:
+    suffix: .ftl
+    template-loader-path: classpath:/templates/
+    content-type: text/html
+    charset: UTF-8
+    cache: false
+
+  mvc:
+    static-path-pattern: /static/**
+
+jasypt:
+  # jasypt 配置项，对应 JasyptEncryptorConfigurationProperties 配置类
+  encryptor:
+    algorithm: PBEWithMD5AndDES # 加密算法
+    password: kirito # 加密秘钥
+
+logging:
+  level:
+    root: debug
+
+mybatis:
+  config-location: classpath:conf/mybatis-config.xml    # MyBatis 配置文件路径
+  mapper-locations: classpath:mapper/*.xml              # Mapper.xml 地址
+  type-aliases-package: per.fjl.elective.mapper         # 数据库实体类包路径
+
+auto_include: common/common.ftl
+auto_import: common/common.ftl as com
